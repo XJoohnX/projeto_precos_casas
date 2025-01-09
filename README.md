@@ -1,15 +1,14 @@
 
 # Previsão de Preços de Imóveis com Machine Learning
 
-## Contexto e Objetivo
 
-O objetivo deste projeto é desenvolver um modelo preditivo robusto para estimar o valor de imóveis com base em suas características. Este projeto foca exclusivamente na construção e avaliação do modelo preditivo, sem explorar em profundidade as relações entre as variáveis. Futuras análises podem incluir a compreensão mais detalhada dessas relações. 
+# Contexto e Objetivo
 
-A previsão de preços imobiliários é fundamental para investidores, compradores e vendedores, permitindo uma tomada de decisão mais informada e estratégica no mercado imobiliário. Utilizando dados detalhados sobre imóveis, o projeto emprega um modelo de Machine Learning, o **Random Forest Regressor**, para atingir alta precisão e confiabilidade.
+O objetivo deste projeto é desenvolver um modelo preditivo robusto para estimar o valor de imóveis com base em suas características. Este projeto focou exclusivamente na construção e avaliação do modelo preditivo, sem explorar em profundidade as relações entre as variáveis e outros aspectos exploratórios. Futuras análises podem incluir a compreensão mais detalhada dessas relações. A previsão de preços imobiliários é fundamental para investidores, compradores e vendedoras, permitindo uma tomada de decisão...
 
 ---
 
-## Tabela de Conteúdo
+# Tabela de Conteúdo
 
 1. [Descrição dos Dados](#descrição-dos-dados)
 2. [Pré-processamento](#pré-processamento)
@@ -22,139 +21,137 @@ A previsão de preços imobiliários é fundamental para investidores, comprador
 
 ---
 
-## Descrição dos Dados
+# Descrição dos Dados
 
-O conjunto de dados contém **53.826 registros** e **28 colunas**, incluindo:
+O conjunto de dados contém **53.826 registros** e **28 colunas**, incluindo informações sobre preço do imóvel (`valor`), IPTU (`iptu`), condomínio (`condominio`), área total (`area_total`), área útil (`area_util`), tipo de anúncio, tipo de unidade, tipo de uso, zona, bairro e uma lista de características do imóvel, como:
 
-- **Preço do imóvel** (`valor`)
-- **IPTU** (`iptu`)
-- **Condomínio** (`condominio`)
-- **Área total** (`area_total`)
-- **Área útil** (`area_util`)
-- Informações categóricas: tipo de anúncio, tipo de unidade, tipo de uso, zona, bairro.
-- Características adicionais dos imóveis, como:
-  - Academia
-  - Animais permitidos
-  - Churrasqueira
-  - Condomínio fechado
-  - Elevador
-  - Piscina
-  - Playground
-  - Portaria 24h
-  - Portão eletrônico
-  - Salão de festas
+- Academia
+- Animais permitidos
+- Churrasqueira
+- Condomínio fechado
+- Elevador
+- Piscina
+- Playground
+- Portaria 24h
+- Portão eletrônico
+- Salão de festas
 
-**Valores faltantes**: Algumas colunas, como `area_total`, `suites` e `vaga`, possuem valores nulos. Esses valores foram tratados adequadamente durante o pré-processamento.
+Alguns campos possuem valores faltantes, como `area_total`, `suites` e `vaga`. As características dos imóveis foram transformadas em variáveis dummy para facilitar a análise.
 
 ---
 
-## Pré-processamento
+# Pré-processamento
 
-### Transformação de Características
+As etapas de pré-processamento incluíram:
 
-- Expansão das características dos imóveis em colunas binárias utilizando `str.get_dummies()`.
-- Remoção de linhas onde todas as características eram iguais a zero.
-- Separação da coluna `caracteristicas` em várias colunas binárias.
+### Transformação de Características:
 
-### Tratamento de Dados
+- As características dos imóveis foram expandidas em colunas binárias utilizando `str.get_dummies()`.
+- Linhas onde todas as características eram iguais a zero foram removidas.
+- A coluna `caracteristicas`, que continha uma lista de atributos, foi separada em várias colunas, representando cada atributo como uma variável binária (presente ou ausente). Essa separação permitiu capturar melhor os atributos individuais dos imóveis e sua influência no valor de preço.
 
-- Conversão de colunas numéricas para o tipo `float`.
-- Remoção de colunas irrelevantes (ex.: `bairro`).
+### Tratamento de Dados:
+
+- Conversão de colunas numéricas para o tipo float.
+- Remoção de colunas irrelevantes, como bairro.
 - Substituição de valores nulos por médias ou estratégias apropriadas.
 
-### Escalonamento
+### Escalonamento:
 
-- Aplicação do **RobustScaler** para normalizar variáveis numéricas (`area_total`, `area_util`, `valor`).
-  - Ajuste robusto a outliers, utilizando mediana e intervalo interquartil.
-  - Melhor estabilidade e desempenho no modelo **Random Forest Regressor**.
+- O **RobustScaler** foi aplicado para normalizar variáveis numéricas, como área total, área útil e preço, utilizando os valores de mediana e intervalo interquartil. Essa técnica permitiu que os dados fossem ajustados de forma robusta a outliers, reduzindo sua influência sem eliminá-los. Na prática, isso resultou em uma distribuição mais uniforme das variáveis, o que melhorou a estabilidade e o desempenho do modelo de Random Forest Regressor.
 
 ---
 
-## Modelagem
+# Modelagem
 
-### Algoritmo Escolhido
+A modelagem utilizou o **Random Forest Regressor** devido à sua capacidade de lidar com dados complexos e mistos. As etapas incluíram:
 
-Utilizou-se o **Random Forest Regressor** devido à sua capacidade de lidar com dados complexos e mistos.
+### Divisão de Dados:
 
-### Divisão de Dados
+- Separar os dados em conjunto de treino (70%) e teste (30%) usando `train_test_split`.
 
-- **Conjunto de treino**: 70%
-- **Conjunto de teste**: 30%
-- Utilizou-se `train_test_split` para a divisão.
+### Treinamento do Modelo:
 
-### Transformação da Variável Alvo
-
-- Aplicação de transformação logarítmica na variável alvo (`valor`) para lidar com a ampla variabilidade nos preços (R$15.000 a R$13.900.000).
+- O modelo foi ajustado para prever a variável alvo `valor`.
 
 ---
 
-## Avaliação do Modelo
+# Avaliação do Modelo
 
-### Resultados Antes da Transformação
+### Transformação da Variável Alvo:
 
-- **MSE**: 284.357.683.697,01
-- **RMSE**: 533.251,99
-- **R²**: 0,8804
+- A transformação logarítmica foi aplicada na variável alvo `valor` para lidar com a ampla variabilidade nos preços dos imóveis, que variavam de R$15.000 a R$13.900.000. Essa distribuição assimétrica dificultava o aprendizado do modelo devido à presença de valores extremos.
 
-### Resultados Após a Transformação
+### Resultados Antes da Transformação:
 
-- **MSE**: 0,0627
-- **RMSE**: 0,25
-- **R²**: 0,9131
+- **Mean Squared Error (MSE):** 284.357.683.697,01
+- **Root Mean Squared Error (RMSE):** 533.251,99
+- **R² (Coeficiente de Determinação):** 0,8804
 
-A transformação logarítmica garantiu uma distribuição mais uniforme, reduzindo a influência de valores extremos e melhorando significativamente o desempenho do modelo.
+### Resultados Após a Transformação:
 
----
+- **Mean Squared Error (MSE):** 0,0627
+- **Root Mean Squared Error (RMSE):** 0,25
+- **R² (Coeficiente de Determinação):** 0,9131
 
-## Resultados
-
-### Importância das Features
-
-| **Feature**        | **Importância** |
-|---------------------|-----------------|
-| Área útil           | 0.61            |
-| Condomínio          | 0.17            |
-| IPTU               | 0.06            |
-| Zona - Zona Sul     | 0.04            |
-| Vaga               | 0.03            |
-| Suítes             | 0.02            |
-| Andar              | 0.01            |
-| Banheiros          | 0.01            |
-| Quartos            | 0.01            |
-
-- **Área útil** foi a variável mais significativa, seguida por **Condomínio** e **IPTU**.
-- Características como **Piscina** e **Academia** não demonstraram impacto relevante no modelo.
+A transformação logarítmica garantiu uma distribuição mais uniforme dos dados, reduzindo a influência de valores muito altos ou baixos e permitindo que o modelo capturasse melhor os padrões subjacentes. Isso resultou em predições mais precisas e consistentes, com ganhos significativos de desempenho nas métricas avaliadas.
 
 ---
 
-## Tecnologias Utilizadas
+# Resultados
 
-- **Python**
-- **Pandas**
-- **Matplotlib**
-- **Seaborn**
-- **Scikit-learn**
-- **NumPy**
+### Desempenho Geral:
+
+- As métricas de desempenho do modelo foram:
+  - **Erro Quadrático Médio (MSE):** Mede a diferença média ao quadrado entre os valores reais e previstos.
+  - **R² (Coeficiente de Determinação):** Indica a proporção da variância explicada pelo modelo. O valor obtido foi **0,9131**, sugerindo um ajuste ainda mais preciso após a transformação logarítmica.
+
+### Importância das Features:
+
+| **Feature**         | **Importância** |
+|----------------------|-----------------|
+| Área útil            | 0.61            |
+| Condomínio           | 0.17            |
+| IPTU                | 0.06            |
+| Zona - Zona Sul      | 0.04            |
+| Vaga                | 0.03            |
+| Suítes              | 0.02            |
+| Andar               | 0.01            |
+| Banheiros           | 0.01            |
+| Quartos             | 0.01            |
+
+A análise das importâncias das features destaca que a **"Área útil"** é a variável mais significativa para o modelo, seguida por **"Condomínio"** e **"IPTU"**. As variáveis relacionadas às zonas geográficas, como **"Zona Sul"**, também apresentaram alguma relevância. Entretanto, diversas características adicionais, como **"Piscina"** e **"Academia"**, não demonstraram impacto relevante no modelo atual. Recomenda-se revisitar essas variáveis em análises futuras para compreender melhor seu papel potencial.
 
 ---
 
-## Conclusão
+# Tecnologias Utilizadas
 
-Este projeto demonstrou que é possível prever com alta precisão o preço de imóveis utilizando o **Random Forest Regressor**. Com a aplicação de técnicas de pré-processamento e transformação de variáveis, o modelo atingiu um **R² de 0,9131**, indicando um excelente ajuste.
+- Python
+- Pandas
+- Matplotlib
+- Seaborn
+- Scikit-learn
+- NumPy
 
 ---
 
-## Recomendações para Próximos Passos
+# Conclusão
 
-#### Análise de Variáveis
+Este projeto demonstrou que é possível prever com alta precisão o preço de imóveis utilizando um modelo de **Random Forest Regressor**. No entanto, é recomendado aprofundar as análises para entender melhor como as variáveis independentes se relacionam entre si e com a variável alvo, oferecendo insights mais completos para o mercado imobiliário.
 
-- Explorar como as variáveis independentes se relacionam entre si e com a variável alvo.
-- Investigar padrões e interações adicionais.
+---
 
-#### Testes com Outros Modelos
+# Recomendações para Próximos Passos
 
-- Experimentar técnicas como **Gradient Boosting** ou **XGBoost** para comparar desempenho.
+## Análise de Variáveis:
 
-#### Validação Contínua
+- Investigar como as variáveis independentes se relacionam com a variável alvo e entre si.
+- Identificar padrões e interações que possam oferecer insights adicionais para o mercado imobiliário.
 
-- Monitorar o modelo com novos conjuntos de dados para garantir consistência e adaptabilidade ao longo do tempo.
+## Testes com Outros Modelos:
+
+- Explorar outras técnicas de Machine Learning, como **Gradient Boosting** ou **XGBoost**, para comparar o desempenho.
+
+## Validação Contínua:
+
+- Monitorar o modelo em novos conjuntos de dados para garantir a consistência e adaptabilidade ao longo do tempo.
