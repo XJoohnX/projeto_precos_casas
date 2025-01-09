@@ -146,15 +146,15 @@ Este projeto demonstrou que é possível prever com alta precisão o preço de i
 
 ## Recomendações para Próximos Passos
 
-### Análise de Variáveis
+#### Análise de Variáveis
 
 - Explorar como as variáveis independentes se relacionam entre si e com a variável alvo.
 - Investigar padrões e interações adicionais.
 
-### Testes com Outros Modelos
+#### Testes com Outros Modelos
 
 - Experimentar técnicas como **Gradient Boosting** ou **XGBoost** para comparar desempenho.
 
-### Validação Contínua
+#### Validação Contínua
 
 - Monitorar o modelo com novos conjuntos de dados para garantir consistência e adaptabilidade ao longo do tempo.
